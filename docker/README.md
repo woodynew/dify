@@ -2,6 +2,8 @@
 
 Welcome to the new `docker` directory for deploying Dify using Docker Compose. This README outlines the updates, deployment instructions, and migration details for existing users.
 
+docker-compose up -d --pull always --force-recreate
+
 ### What's Updated
 
 - **Certbot Container**: `docker-compose.yaml` now contains `certbot` for managing SSL certificates. This container automatically renews certificates and ensures secure HTTPS connections.  
@@ -20,23 +22,24 @@ Welcome to the new `docker` directory for deploying Dify using Docker Compose. T
 
 1. **Prerequisites**: Ensure Docker and Docker Compose are installed on your system.
 2. **Environment Setup**:
-    - Navigate to the `docker` directory.
-    - Copy the `.env.example` file to a new file named `.env` by running `cp .env.example .env`.
-    - Customize the `.env` file as needed. Refer to the `.env.example` file for detailed configuration options.
+   - Navigate to the `docker` directory.
+   - Copy the `.env.example` file to a new file named `.env` by running `cp .env.example .env`.
+   - Customize the `.env` file as needed. Refer to the `.env.example` file for detailed configuration options.
 3. **Running the Services**:
-    - Execute `docker compose up` from the `docker` directory to start the services.
-    - To specify a vector database, set the `VECTOR_STORE` variable in your `.env` file to your desired vector database service, such as `milvus`, `weaviate`, or `opensearch`.
+   - Execute `docker compose up` from the `docker` directory to start the services.
+   - To specify a vector database, set the `VECTOR_STORE` variable in your `.env` file to your desired vector database service, such as `milvus`, `weaviate`, or `opensearch`.
 4. **SSL Certificate Setup**:
-    - Rrefer `docker/certbot/README.md` to set up SSL certificates using Certbot.
+   - Rrefer `docker/certbot/README.md` to set up SSL certificates using Certbot.
 
 ### How to Deploy Middleware for Developing Dify
 
 1. **Middleware Setup**:
-    - Use the `docker-compose.middleware.yaml` for setting up essential middleware services like databases and caches.
-    - Navigate to the `docker` directory.
-    - Ensure the `middleware.env` file is created by running `cp middleware.env.example middleware.env` (refer to the `middleware.env.example` file).
+   - Use the `docker-compose.middleware.yaml` for setting up essential middleware services like databases and caches.
+   - Navigate to the `docker` directory.
+   - Ensure the `middleware.env` file is created by running `cp middleware.env.example middleware.env` (refer to the `middleware.env.example` file).
 2. **Running Middleware Services**:
-    - Execute `docker-compose -f docker-compose.middleware.yaml up --env-file middleware.env -d` to start the middleware services.
+   - Execute `docker-compose -f docker-compose.middleware.yaml up --env-file middleware.env -d` to start the middleware services.
+     docker-compose -f docker-compose.middleware.yaml --env-file middleware.env up -d
 
 ### Migration for Existing Users
 
@@ -44,9 +47,9 @@ For users migrating from the `docker-legacy` setup:
 
 1. **Review Changes**: Familiarize yourself with the new `.env` configuration and Docker Compose setup.
 2. **Transfer Customizations**:
-    - If you have customized configurations such as `docker-compose.yaml`, `ssrf_proxy/squid.conf`, or `nginx/conf.d/default.conf`, you will need to reflect these changes in the `.env` file you create.
+   - If you have customized configurations such as `docker-compose.yaml`, `ssrf_proxy/squid.conf`, or `nginx/conf.d/default.conf`, you will need to reflect these changes in the `.env` file you create.
 3. **Data Migration**:
-    - Ensure that data from services like databases and caches is backed up and migrated appropriately to the new structure if necessary.
+   - Ensure that data from services like databases and caches is backed up and migrated appropriately to the new structure if necessary.
 
 ### Overview of `.env`
 
@@ -61,35 +64,43 @@ For users migrating from the `docker-legacy` setup:
 The `.env.example` file provided in the Docker setup is extensive and covers a wide range of configuration options. It is structured into several sections, each pertaining to different aspects of the application and its services. Here are some of the key sections and variables:
 
 1. **Common Variables**:
-    - `CONSOLE_API_URL`, `SERVICE_API_URL`: URLs for different API services.
-    - `APP_WEB_URL`: Frontend application URL.
-    - `FILES_URL`: Base URL for file downloads and previews.
+
+   - `CONSOLE_API_URL`, `SERVICE_API_URL`: URLs for different API services.
+   - `APP_WEB_URL`: Frontend application URL.
+   - `FILES_URL`: Base URL for file downloads and previews.
 
 2. **Server Configuration**:
-    - `LOG_LEVEL`, `DEBUG`, `FLASK_DEBUG`: Logging and debug settings.
-    - `SECRET_KEY`: A key for encrypting session cookies and other sensitive data.
+
+   - `LOG_LEVEL`, `DEBUG`, `FLASK_DEBUG`: Logging and debug settings.
+   - `SECRET_KEY`: A key for encrypting session cookies and other sensitive data.
 
 3. **Database Configuration**:
-    - `DB_USERNAME`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`: PostgreSQL database credentials and connection details.
+
+   - `DB_USERNAME`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`: PostgreSQL database credentials and connection details.
 
 4. **Redis Configuration**:
-    - `REDIS_HOST`, `REDIS_PORT`, `REDIS_PASSWORD`: Redis server connection settings.
+
+   - `REDIS_HOST`, `REDIS_PORT`, `REDIS_PASSWORD`: Redis server connection settings.
 
 5. **Celery Configuration**:
-    - `CELERY_BROKER_URL`: Configuration for Celery message broker.
+
+   - `CELERY_BROKER_URL`: Configuration for Celery message broker.
 
 6. **Storage Configuration**:
-    - `STORAGE_TYPE`, `S3_BUCKET_NAME`, `AZURE_BLOB_ACCOUNT_NAME`: Settings for file storage options like local, S3, Azure Blob, etc.
+
+   - `STORAGE_TYPE`, `S3_BUCKET_NAME`, `AZURE_BLOB_ACCOUNT_NAME`: Settings for file storage options like local, S3, Azure Blob, etc.
 
 7. **Vector Database Configuration**:
-    - `VECTOR_STORE`: Type of vector database (e.g., `weaviate`, `milvus`).
-    - Specific settings for each vector store like `WEAVIATE_ENDPOINT`, `MILVUS_URI`.
+
+   - `VECTOR_STORE`: Type of vector database (e.g., `weaviate`, `milvus`).
+   - Specific settings for each vector store like `WEAVIATE_ENDPOINT`, `MILVUS_URI`.
 
 8. **CORS Configuration**:
-    - `WEB_API_CORS_ALLOW_ORIGINS`, `CONSOLE_CORS_ALLOW_ORIGINS`: Settings for cross-origin resource sharing.
+
+   - `WEB_API_CORS_ALLOW_ORIGINS`, `CONSOLE_CORS_ALLOW_ORIGINS`: Settings for cross-origin resource sharing.
 
 9. **Other Service-Specific Environment Variables**:
-    - Each service like `nginx`, `redis`, `db`, and vector databases have specific environment variables that are directly referenced in the `docker-compose.yaml`.
+   - Each service like `nginx`, `redis`, `db`, and vector databases have specific environment variables that are directly referenced in the `docker-compose.yaml`.
 
 ### Additional Information
 
@@ -97,3 +108,5 @@ The `.env.example` file provided in the Docker setup is extensive and covers a w
 - **Support**: For detailed configuration options and environment variable settings, refer to the `.env.example` file and the Docker Compose configuration files in the `docker` directory.
 
 This README aims to guide you through the deployment process using the new Docker Compose setup. For any issues or further assistance, please refer to the official documentation or contact support.
+
+docker-compose -f /mnt/myai/docker/danswer/danswer/deployment/docker_compose/docker-compose.gpu-dev-aliyun-v2.yml -p danswer-stack up -d --pull always --force-recreate
